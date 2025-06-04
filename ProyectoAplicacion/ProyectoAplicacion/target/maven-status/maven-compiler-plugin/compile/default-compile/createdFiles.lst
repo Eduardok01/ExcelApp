@@ -1,7 +1,0 @@
-com\example\ProyectoAplicacion\model\Viaje.class
-com\example\ProyectoAplicacion\repository\ViajeRepository.class
-com\example\ProyectoAplicacion\controller\HomeController.class
-com\example\ProyectoAplicacion\ProyectoAplicacionApplication.class
-com\example\ProyectoAplicacion\config\SecurityConfig.class
-com\example\ProyectoAplicacion\controller\ViajeController.class
-com\example\ProyectoAplicacion\service\ViajeService.class
