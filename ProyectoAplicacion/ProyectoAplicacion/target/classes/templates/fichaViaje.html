@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ficha de Viaje</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+        .field {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        button {
+            padding: 0.7rem 2rem;
+            margin: 0 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .save-btn { background-color: #4CAF50; color: white; }
+        .success-message {
+            max-width: 800px;
+            margin: 1rem auto;
+            padding: 1rem;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        /* Estilos para búsqueda */
+        #busqueda {
+            max-width: 800px;
+            margin: 2rem auto 1rem auto;
+            display: block;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<h1>Ficha de Viaje</h1>
+
+<!-- Mensaje de éxito -->
+<div th:if="${mensajeExito}" class="success-message" th:text="${mensajeExito}"></div>
+
+<form th:action="@{/viajes/guardar}" th:object="${viaje}" method="post" id="fichaForm">
+    <div class="field">
+        <label for="nombreConductor">Nombre del Conductor</label>
+        <input type="text" id="nombreConductor" th:field="*{nombreConductor}" required />
+    </div>
+
+    <div class="field">
+        <label for="rutConductor">RUT del Conductor</label>
+        <input type="text" id="rutConductor" th:field="*{rutConductor}" required />
+    </div>
+
+    <div class="field">
+        <label for="fechaViaje">Fecha del Viaje</label>
+        <input type="date" id="fechaViaje" th:field="*{fechaViaje}" required />
+    </div>
+
+    <div class="field">
+        <label for="patente">Patente</label>
+        <input type="text" id="patente" th:field="*{patente}" required />
+    </div>
+
+    <div class="field">
+        <label for="tipoCargaIda">Tipo de Carga (Ida)</label>
+        <input type="text" id="tipoCargaIda" th:field="*{tipoCargaIda}" />
+    </div>
+
+    <div class="field">
+        <label for="tipoCargaVuelta">Tipo de Carga (Vuelta)</label>
+        <input type="text" id="tipoCargaVuelta" th:field="*{tipoCargaVuelta}" />
+    </div>
+
+    <div class="field">
+        <label for="fondoARendir">Fondo a Rendir</label>
+        <input type="number" step="0.01" id="fondoARendir" th:field="*{fondoARendir}" />
+    </div>
+
+    <div class="field">
+        <label for="viaticos">Viáticos</label>
+        <input type="number" step="0.01" id="viaticos" th:field="*{viaticos}" />
+    </div>
+
+    <div class="field">
+        <label>Peajes</label>
+        <input type="number" step="0.01" placeholder="Peaje 1" th:field="*{peaje1}" />
+        <input type="number" step="0.01" placeholder="Peaje 2" th:field="*{peaje2}" />
+        <input type="number" step="0.01" placeholder="Peaje 3" th:field="*{peaje3}" />
+    </div>
+
+    <div class="field">
+        <label for="litrosCombustible">Litros de Combustible</label>
+        <input type="number" step="0.01" id="litrosCombustible" th:field="*{litrosCombustible}" />
+    </div>
+
+    <div class="field">
+        <label for="precioLitroCombustible">Precio por Litro</label>
+        <input type="number" step="0.01" id="precioLitroCombustible" th:field="*{precioLitroCombustible}" />
+    </div>
+
+    <div class="field">
+        <label for="gastoPetroleo">Gasto en Petróleo (Calculado)</label>
+        <input type="number" step="0.01" id="gastoPetroleo" th:value="${viaje.gastoPetroleo}" readonly />
+    </div>
+
+    <div class="field">
+        <label for="kmInicial">Kilometraje Inicial</label>
+        <input type="number" id="kmInicial" th:field="*{kmInicial}" />
+    </div>
+
+    <div class="field">
+        <label for="kmFinal">Kilometraje Final</label>
+        <input type="number" id="kmFinal" th:field="*{kmFinal}" />
+    </div>
+
+    <div class="field">
+        <label for="cambioNeumatico">¿Cambio de Neumático?</label>
+        <select id="cambioNeumatico" th:field="*{cambioNeumatico}">
+            <option th:value="true">Sí</option>
+            <option th:value="false" selected>No</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label for="neumaticoCambiado">Neumático Cambiado</label>
+        <input type="text" id="neumaticoCambiado" th:field="*{neumaticoCambiado}" placeholder="Ejemplo: Delantero Derecho" />
+    </div>
+
+    <div class="field">
+        <label for="usoAdBlue">Uso de AdBlue</label>
+        <select id="usoAdBlue" th:field="*{usoAdBlue}">
+            <option th:value="true">Sí</option>
+            <option th:value="false" selected>No</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label for="otrosGastos">Otros Gastos</label>
+        <textarea id="otrosGastos" th:field="*{otrosGastos}"></textarea>
+    </div>
+
+    <div class="button-group">
+        <button type="submit" class="save-btn">Guardar</button>
+    </div>
+</form>
+
+<!-- Campo para búsqueda simple (por nombre, patente o RUT) -->
+<input type="text" id="busqueda" placeholder="Buscar fichas por nombre, patente o RUT (solo en listado)" />
+
+<!-- Aquí deberías tener tu tabla/listado de fichas para aplicar filtro. Ejemplo: -->
+<table id="tablaViajes" style="max-width: 800px; margin: auto; margin-top: 1rem; background:white; border-collapse: collapse; width: 100%;">
+    <thead>
+    <tr>
+        <th>Nombre Conductor</th>
+        <th>Patente</th>
+        <th>RUT</th>
+        <th>Fecha</th>
+        <!-- Agrega más columnas según necesites -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Suponiendo que tienes una lista en el modelo llamada "viajes" -->
+    <tr th:each="v : ${viajes}" class="fila-viaje">
+        <td class="nombreConductor" th:text="${v.nombreConductor}">Nombre</td>
+        <td class="patente" th:text="${v.patente}">Patente</td>
+        <td class="rutConductor" th:text="${v.rutConductor}">RUT</td>
+        <td th:text="${v.fechaViaje}">Fecha</td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    // Cálculo dinámico del gasto petróleo
+    const litrosInput = document.getElementById('litrosCombustible');
+    const precioInput = document.getElementById('precioLitroCombustible');
+    const gastoPetroleoInput = document.getElementById('gastoPetroleo');
+
+    function calcularGasto() {
+        const litros = parseFloat(litrosInput.value) || 0;
+        const precio = parseFloat(precioInput.value) || 0;
+        const total = litros * precio;
+        gastoPetroleoInput.value = total.toFixed(2);
+    }
+
+    litrosInput.addEventListener('input', calcularGasto);
+    precioInput.addEventListener('input', calcularGasto);
+
+    // Filtro simple para tabla de viajes
+    const busquedaInput = document.getElementById('busqueda');
+    const filas = document.querySelectorAll('#tablaViajes tbody tr');
+
+    busquedaInput.addEventListener('input', function() {
+        const filtro = this.value.toLowerCase();
+
+        filas.forEach(fila => {
+            const nombre = fila.querySelector('.nombreConductor').textContent.toLowerCase();
+            const patente = fila.querySelector('.patente').textContent.toLowerCase();
+            const rut = fila.querySelector('.rutConductor').textContent.toLowerCase();
+
+            const coincide = nombre.includes(filtro) || patente.includes(filtro) || rut.includes(filtro);
+
+            fila.style.display = coincide ? '' : 'none';
+        });
+    });
+</script>
+</body>
+</html>
