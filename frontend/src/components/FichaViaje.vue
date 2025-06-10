@@ -224,7 +224,7 @@
 
 <script setup>
 import { reactive, ref, computed } from 'vue'
-import axios from 'axios'
+import { crearViaje } from '@/services/viajeService.js'
 
 const ficha = reactive({
   fechaIda: '',
@@ -305,27 +305,24 @@ function quitarPeaje(index) {
 }
 
 const ingresosTotales = computed(() => {
-  const totalIda = ficha.cargasIda.reduce((acc, c) => acc + c.totalCarga, 0)
-  const totalVuelta = ficha.cargasVuelta.reduce((acc, c) => acc + c.totalCarga, 0)
-  return totalIda + totalVuelta
+  let ingresosIda = ficha.cargasIda.reduce((acc, c) => acc + c.totalCarga, 0)
+  let ingresosVuelta = ficha.cargasVuelta.reduce((acc, c) => acc + c.totalCarga, 0)
+  return ingresosIda + ingresosVuelta
 })
 
 const gananciaTotal = computed(() => {
-  const totalGastos =
-      ficha.petroleoIda.total +
-      ficha.petroleoVuelta.total +
-      ficha.viaticos.reduce((acc, v) => acc + v.monto, 0) +
-      ficha.peajes.reduce((acc, p) => acc + p.costo, 0) +
-      (ficha.adBlue.uso ? ficha.adBlue.costo : 0) +
-      (ficha.neumatico.cambio ? ficha.neumatico.costo : 0)
-
-  return ingresosTotales.value - totalGastos
+  let ingresos = ingresosTotales.value
+  let gastosViaticos = ficha.viaticos.reduce((acc, v) => acc + v.monto, 0)
+  let gastosPeajes = ficha.peajes.reduce((acc, p) => acc + p.costo, 0)
+  let gastosPetroleo = ficha.petroleoIda.total + ficha.petroleoVuelta.total
+  let gastosAdBlue = ficha.adBlue.uso ? ficha.adBlue.costo : 0
+  let gastosNeumatico = ficha.neumatico.cambio ? ficha.neumatico.costo : 0
+  return ingresos - (gastosViaticos + gastosPeajes + gastosPetroleo + gastosAdBlue + gastosNeumatico)
 })
 
 async function enviarFicha() {
   try {
-    const url = 'http://localhost:8080/api/viajes' // Ajusta a tu API real
-    await axios.post(url, ficha)
+    await crearViaje(ficha)
     mensaje.value = 'Ficha enviada correctamente.'
   } catch (error) {
     mensaje.value = 'Error al enviar ficha: ' + (error.response?.data?.message || error.message)
@@ -335,106 +332,33 @@ async function enviarFicha() {
 
 <style scoped>
 .formulario {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 25px 40px;
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: auto;
   font-family: Arial, sans-serif;
-  color: #333;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #1f4e79;
-}
-
-form > div,
 fieldset {
   margin-bottom: 20px;
-}
-
-label {
-  display: inline-block;
-  width: 140px;
-  font-weight: 600;
-  vertical-align: middle;
-}
-
-input[type='text'],
-input[type='date'],
-input[type='number'] {
-  width: 250px;
-  padding: 6px 10px;
-  font-size: 15px;
-  border: 1px solid #bbb;
-  border-radius: 5px;
-}
-
-input[type='checkbox'] {
-  width: auto;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-fieldset {
-  border: 1px solid #ccc;
-  padding: 15px 20px 20px;
-  border-radius: 8px;
-  background: #e8f0fe;
-}
-
-legend {
-  font-weight: 700;
-  padding: 0 10px;
-  color: #0d2a4d;
-}
-
-button {
-  background-color: #1f4e79;
-  border: none;
-  color: white;
-  padding: 10px 18px;
-  margin-top: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #3a6db0;
-}
-
-.item-array {
-  margin-bottom: 15px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 18px;
-  align-items: center;
-}
-
-.cargas-grid label,
-.cargas-grid input {
-  width: auto;
-  min-width: 130px;
-  margin-right: 12px;
+  padding: 10px;
 }
 
 .cargas-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr) auto;
-  gap: 10px 15px;
+  gap: 10px;
   align-items: center;
-  margin-bottom: 15px;
+}
+
+.item-array {
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 5px;
 }
 
 .mensaje {
-  margin-top: 30px;
-  text-align: center;
-  font-weight: 700;
-  color: green;
+  margin-top: 15px;
+  font-weight: bold;
 }
 </style>
