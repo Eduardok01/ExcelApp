@@ -48,7 +48,7 @@ public class ViajeService {
         viajeRepository.deleteById(id);
     }
 
-    private double calcularIngresosTotales(Viaje viaje) {
+    public double calcularIngresosTotales(Viaje viaje) {
         return viaje.getCargasIda().stream()
                 .mapToDouble(c -> c.getTotalCarga() != null ? c.getTotalCarga() : 0.0)
                 .sum()
@@ -94,7 +94,7 @@ public class ViajeService {
                 .sum();
     }
 
-    private double calcularGastosTotales(Viaje viaje) {
+    public double calcularGastosTotales(Viaje viaje) {
         return calcularTotalViaticos(viaje)
                 + calcularGastoPetroleo(viaje)
                 + calcularGastoAdBlue(viaje)

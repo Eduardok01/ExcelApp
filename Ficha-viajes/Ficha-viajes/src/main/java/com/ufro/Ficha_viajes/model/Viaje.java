@@ -101,4 +101,20 @@ public class Viaje {
     public void setGastosTotales(Double gastosTotales) {
         this.gastosTotales = gastosTotales;
     }
+
+    public Double getIngresosTotales() {
+        return ingresosTotales;
+    }
+
+    public void setIngresosTotales(Double ingresosTotales) {
+        this.ingresosTotales = ingresosTotales;
+    }
+
+    public Double getGananciaTotal() {
+        return gananciaTotal;
+    }
+
+    public void setGananciaTotal(Double gananciaTotal) {
+        this.gananciaTotal = gananciaTotal;
+    }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8" />
     <title>Ficha de Viaje</title>
@@ -95,11 +95,13 @@
     <table>
         <thead>
         <tr>
+            <th>Ciudad</th>
             <th>Monto (CLP)</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="peaje : ${viaje.peajes}">
+            <td th:text="${peaje.nombre}">Ciudad</td>
             <td th:text="${#numbers.formatDecimal(peaje.costo, 0, 'COMMA', 2, 'POINT')}"></td>
         </tr>
         </tbody>
@@ -140,10 +142,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="petroleo : ${viaje.petroleoVuelta}">
-            <td th:text="${petroleo.litros}"></td>
-            <td th:text="${#numbers.formatDecimal(petroleo.precioLitro, 0, 'COMMA', 2, 'POINT')}"></td>
-            <td th:text="${#numbers.formatDecimal(petroleo.total, 0, 'COMMA', 2, 'POINT')}"></td>
+        <tr>
+            <td th:text="${viaje.petroleoVuelta.litros}"></td>
+            <td th:text="${#numbers.formatDecimal(viaje.petroleoVuelta.precioLitro, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(viaje.petroleoVuelta.total, 0, 'COMMA', 2, 'POINT')}"></td>
         </tr>
         </tbody>
     </table>
@@ -160,7 +162,7 @@
         </thead>
         <tbody>
         <tr>
-            <td th:text="${viaje.adBlue.uso} ? 'Sí' : 'No'"></td>
+            <td th:text="${viaje.adBlue.uso ? 'Sí' : 'No'}"></td>
             <td th:text="${#numbers.formatDecimal(viaje.adBlue.costo, 0, 'COMMA', 2, 'POINT')}"></td>
         </tr>
         </tbody>
@@ -179,7 +181,7 @@
         </thead>
         <tbody>
         <tr>
-            <td th:text="${viaje.neumatico.cambio} ? 'Sí' : 'No'"></td>
+            <td th:text="${viaje.neumatico.cambio ? 'Sí' : 'No'}"></td>
             <td th:text="${viaje.neumatico.detalleCambio}"></td>
             <td th:text="${#numbers.formatDecimal(viaje.neumatico.costo, 0, 'COMMA', 2, 'POINT')}"></td>
         </tr>
@@ -193,15 +195,15 @@
         <tbody>
         <tr>
             <td><strong>Ingresos Totales (CLP):</strong></td>
-            <td th:text="${#numbers.formatDecimal(viaje.ingresosTotales, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(viaje.ingresosTotales, 0, 'COMMA', 2, 'POINT')}">0</td>
         </tr>
         <tr>
             <td><strong>Gastos Totales (CLP):</strong></td>
-            <td th:text="${#numbers.formatDecimal(viaje.gastosTotales, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(viaje.gastosTotales, 0, 'COMMA', 2, 'POINT')}">0</td>
         </tr>
         <tr>
             <td><strong>Ganancia Neta (CLP):</strong></td>
-            <td th:text="${#numbers.formatDecimal(viaje.gananciaTotal, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${#numbers.formatDecimal(viaje.gananciaTotal, 0, 'COMMA', 2, 'POINT')}">0</td>
         </tr>
         </tbody>
     </table>
