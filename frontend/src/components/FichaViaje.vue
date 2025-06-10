@@ -324,7 +324,7 @@ const gananciaTotal = computed(() => {
 
 async function enviarFicha() {
   try {
-    const url = 'http://localhost:8080/api/fichas' // Ajusta a tu API real
+    const url = 'http://localhost:8080/api/viajes' // Ajusta a tu API real
     await axios.post(url, ficha)
     mensaje.value = 'Ficha enviada correctamente.'
   } catch (error) {
