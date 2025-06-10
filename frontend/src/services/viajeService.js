@@ -1,4 +1,3 @@
-// src/services/viajeService.js
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/api/viajes';
@@ -13,4 +12,16 @@ export const crearViaje = async (viaje) => {
     return response.data;
 };
 
-// Puedes agregar más funciones para update, delete, etc. según necesites
+export const descargarPdf = async (viajeId) => {
+    const response = await axios.get(`api/viajes/pdf`, {
+        responseType: 'blob' // Para recibir el archivo PDF como blob
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `ficha-viaje-${viajeId}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+};

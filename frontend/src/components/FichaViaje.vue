@@ -45,23 +45,9 @@
           <label>Tipo de carga:</label>
           <input v-model="carga.tipoCarga" type="text" required />
           <label>Kilos:</label>
-          <input
-              v-model.number="carga.kilos"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalCarga(carga)"
-              required
-          />
+          <input v-model.number="carga.kilos" type="number" min="0" step="0.01" @input="actualizarTotalCarga(carga)" required />
           <label>Precio por Kilo:</label>
-          <input
-              v-model.number="carga.precioPorKilo"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalCarga(carga)"
-              required
-          />
+          <input v-model.number="carga.precioPorKilo" type="number" min="0" step="0.01" @input="actualizarTotalCarga(carga)" required />
           <label>Total carga:</label>
           <input :value="carga.totalCarga.toFixed(2)" type="number" readonly />
           <button type="button" @click="quitarCarga('ida', index)">Eliminar</button>
@@ -80,21 +66,9 @@
           <label>Tipo de carga:</label>
           <input v-model="carga.tipoCarga" type="text" />
           <label>Kilos:</label>
-          <input
-              v-model.number="carga.kilos"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalCarga(carga)"
-          />
+          <input v-model.number="carga.kilos" type="number" min="0" step="0.01" @input="actualizarTotalCarga(carga)" />
           <label>Precio por Kilo:</label>
-          <input
-              v-model.number="carga.precioPorKilo"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalCarga(carga)"
-          />
+          <input v-model.number="carga.precioPorKilo" type="number" min="0" step="0.01" @input="actualizarTotalCarga(carga)" />
           <label>Total carga:</label>
           <input :value="carga.totalCarga.toFixed(2)" type="number" readonly />
           <button type="button" @click="quitarCarga('vuelta', index)">Eliminar</button>
@@ -107,21 +81,9 @@
         <legend>Petróleo Ida</legend>
         <div>
           <label>Litros:</label>
-          <input
-              v-model.number="ficha.petroleoIda.litros"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalPetroleo('ida')"
-          />
+          <input v-model.number="ficha.petroleoIda.litros" type="number" min="0" step="0.01" @input="actualizarTotalPetroleo('ida')" />
           <label>Precio por litro:</label>
-          <input
-              v-model.number="ficha.petroleoIda.precioLitro"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalPetroleo('ida')"
-          />
+          <input v-model.number="ficha.petroleoIda.precioLitro" type="number" min="0" step="0.01" @input="actualizarTotalPetroleo('ida')" />
           <label>Total:</label>
           <input :value="ficha.petroleoIda.total.toFixed(2)" type="number" readonly />
         </div>
@@ -132,21 +94,9 @@
         <legend>Petróleo Vuelta</legend>
         <div>
           <label>Litros:</label>
-          <input
-              v-model.number="ficha.petroleoVuelta.litros"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalPetroleo('vuelta')"
-          />
+          <input v-model.number="ficha.petroleoVuelta.litros" type="number" min="0" step="0.01" @input="actualizarTotalPetroleo('vuelta')" />
           <label>Precio por litro:</label>
-          <input
-              v-model.number="ficha.petroleoVuelta.precioLitro"
-              type="number"
-              min="0"
-              step="0.01"
-              @input="actualizarTotalPetroleo('vuelta')"
-          />
+          <input v-model.number="ficha.petroleoVuelta.precioLitro" type="number" min="0" step="0.01" @input="actualizarTotalPetroleo('vuelta')" />
           <label>Total:</label>
           <input :value="ficha.petroleoVuelta.total.toFixed(2)" type="number" readonly />
         </div>
@@ -216,6 +166,8 @@
       </fieldset>
 
       <button type="submit">Enviar Ficha</button>
+      <!-- Botón Guardar PDF -->
+      <button type="button" @click="guardarPdf" style="margin-left: 10px;">Guardar PDF</button>
     </form>
 
     <div v-if="mensaje" class="mensaje">{{ mensaje }}</div>
@@ -224,56 +176,33 @@
 
 <script setup>
 import { reactive, ref, computed } from 'vue'
-import { crearViaje } from '@/services/viajeService.js'
+import { crearViaje, descargarPdf } from '@/services/viajeService.js'
+import axios from 'axios'
 
 const ficha = reactive({
   fechaIda: '',
   fechaVuelta: '',
-  conductor: {
-    nombre: '',
-    rut: ''
-  },
-  camion: {
-    patente: ''
-  },
+  conductor: { nombre: '', rut: '' },
+  camion: { patente: '' },
   cargasIda: [],
   cargasVuelta: [],
-  petroleoIda: {
-    litros: 0,
-    precioLitro: 0,
-    total: 0
-  },
-  petroleoVuelta: {
-    litros: 0,
-    precioLitro: 0,
-    total: 0
-  },
+  petroleoIda: { litros: 0, precioLitro: 0, total: 0 },
+  petroleoVuelta: { litros: 0, precioLitro: 0, total: 0 },
   viaticos: [],
   peajes: [],
-  adBlue: {
-    uso: false,
-    costo: 0
-  },
-  neumatico: {
-    cambio: false,
-    detalleCambio: '',
-    costo: 0
-  },
-  ingresosTotales: 0,
-  gananciaTotal: 0
+  adBlue: { uso: false, costo: 0 },
+  neumatico: { cambio: false, detalleCambio: '', costo: 0 }
 })
 
 const mensaje = ref('')
 
 function agregarCarga(tipo) {
   const nuevaCarga = { tipoCarga: '', kilos: 0, precioPorKilo: 0, totalCarga: 0 }
-  if (tipo === 'ida') ficha.cargasIda.push(nuevaCarga)
-  else if (tipo === 'vuelta') ficha.cargasVuelta.push(nuevaCarga)
+  ficha[tipo === 'ida' ? 'cargasIda' : 'cargasVuelta'].push(nuevaCarga)
 }
 
 function quitarCarga(tipo, index) {
-  if (tipo === 'ida') ficha.cargasIda.splice(index, 1)
-  else if (tipo === 'vuelta') ficha.cargasVuelta.splice(index, 1)
+  ficha[tipo === 'ida' ? 'cargasIda' : 'cargasVuelta'].splice(index, 1)
 }
 
 function actualizarTotalCarga(carga) {
@@ -281,11 +210,13 @@ function actualizarTotalCarga(carga) {
 }
 
 function actualizarTotalPetroleo(tipo) {
-  if (tipo === 'ida') {
-    ficha.petroleoIda.total = ficha.petroleoIda.litros * ficha.petroleoIda.precioLitro
-  } else if (tipo === 'vuelta') {
-    ficha.petroleoVuelta.total = ficha.petroleoVuelta.litros * ficha.petroleoVuelta.precioLitro
-  }
+  ficha[`petroleo${capitalize(tipo)}`].total =
+      ficha[`petroleo${capitalize(tipo)}`].litros *
+      ficha[`petroleo${capitalize(tipo)}`].precioLitro
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 function agregarViatico() {
@@ -304,28 +235,53 @@ function quitarPeaje(index) {
   ficha.peajes.splice(index, 1)
 }
 
-const ingresosTotales = computed(() => {
-  let ingresosIda = ficha.cargasIda.reduce((acc, c) => acc + c.totalCarga, 0)
-  let ingresosVuelta = ficha.cargasVuelta.reduce((acc, c) => acc + c.totalCarga, 0)
-  return ingresosIda + ingresosVuelta
-})
+const ingresosTotales = computed(() =>
+    [...ficha.cargasIda, ...ficha.cargasVuelta].reduce((acc, c) => acc + c.totalCarga, 0)
+)
 
 const gananciaTotal = computed(() => {
-  let ingresos = ingresosTotales.value
-  let gastosViaticos = ficha.viaticos.reduce((acc, v) => acc + v.monto, 0)
-  let gastosPeajes = ficha.peajes.reduce((acc, p) => acc + p.costo, 0)
-  let gastosPetroleo = ficha.petroleoIda.total + ficha.petroleoVuelta.total
-  let gastosAdBlue = ficha.adBlue.uso ? ficha.adBlue.costo : 0
-  let gastosNeumatico = ficha.neumatico.cambio ? ficha.neumatico.costo : 0
-  return ingresos - (gastosViaticos + gastosPeajes + gastosPetroleo + gastosAdBlue + gastosNeumatico)
+  const gastos = [
+    ...ficha.viaticos.map(v => v.monto),
+    ...ficha.peajes.map(p => p.costo),
+    ficha.petroleoIda.total,
+    ficha.petroleoVuelta.total,
+    ficha.adBlue.uso ? ficha.adBlue.costo : 0,
+    ficha.neumatico.cambio ? ficha.neumatico.costo : 0
+  ].reduce((acc, val) => acc + val, 0)
+
+  return ingresosTotales.value - gastos
 })
 
 async function enviarFicha() {
   try {
-    await crearViaje(ficha)
+    const creado = await crearViaje(ficha) // Guarda el viaje en backend
     mensaje.value = 'Ficha enviada correctamente.'
+    /* await descargarPdf*/          // Descarga PDF usando el ID retornado
   } catch (error) {
-    mensaje.value = 'Error al enviar ficha: ' + (error.response?.data?.message || error.message)
+    mensaje.value =
+        'Error al enviar ficha: ' + (error.response?.data?.message || error.message)
+  }
+}
+
+
+// Nueva función para descargar el PDF
+async function guardarPdf() {
+  try {
+    // Aquí asumo que la API backend recibe el objeto ficha y devuelve el PDF
+    const response = await axios.post('http://localhost:8080/api/viajes/pdf', ficha, { responseType: 'blob' })
+
+
+    const blob = new Blob([response.data], { type: 'application/pdf' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'ficha_viaje.pdf')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    mensaje.value = 'Error al generar PDF: ' + (error.response?.data?.message || error.message)
   }
 }
 </script>
@@ -335,11 +291,21 @@ async function enviarFicha() {
   max-width: 800px;
   margin: auto;
   font-family: Arial, sans-serif;
+  background-color: white; /* Fondo blanco */
+  color: black; /* Texto negro por defecto */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+h1, legend {
+  color: #0074B8; /* Azul del encabezado */
 }
 
 fieldset {
   margin-bottom: 20px;
   padding: 10px;
+  border: 2px solid #0074B8; /* Bordes con azul personalizado */
+  border-radius: 5px;
 }
 
 .cargas-grid {
@@ -355,10 +321,21 @@ fieldset {
 
 button {
   margin-top: 5px;
+  background-color: #0074B8;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005f95;
 }
 
 .mensaje {
   margin-top: 15px;
   font-weight: bold;
+  color: green;
 }
 </style>
