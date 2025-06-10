@@ -1,6 +1,7 @@
 package com.ufro.Ficha_viajes.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,13 +15,18 @@ public class Viaje {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "La fecha de ida es obligatoria")
     private LocalDate fechaIda;
+
+    @NotNull(message = "La fecha de vuelta es obligatoria")
     private LocalDate fechaVuelta;
 
     @Embedded
+    @NotNull(message = "El conductor es obligatorio")
     private Conductor conductor;
 
     @Embedded
+    @NotNull(message = "El camión es obligatorio")
     private Camion camion;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -33,16 +39,16 @@ public class Viaje {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "litros", column = @Column(name = "litros_petroleo_ida")),
-            @AttributeOverride(name = "precioLitro", column = @Column(name = "precio_litro_petroleo_ida")),
+            @AttributeOverride(name = "litros", column = @Column(name = "litros_ida")),
+            @AttributeOverride(name = "precioLitro", column = @Column(name = "precio_litro_ida")),
             @AttributeOverride(name = "total", column = @Column(name = "total_petroleo_ida"))
     })
     private Petroleo petroleoIda;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "litros", column = @Column(name = "litros_petroleo_vuelta")),
-            @AttributeOverride(name = "precioLitro", column = @Column(name = "precio_litro_petroleo_vuelta")),
+            @AttributeOverride(name = "litros", column = @Column(name = "litros_vuelta")),
+            @AttributeOverride(name = "precioLitro", column = @Column(name = "precio_litro_vuelta")),
             @AttributeOverride(name = "total", column = @Column(name = "total_petroleo_vuelta"))
     })
     private Petroleo petroleoVuelta;
@@ -70,12 +76,10 @@ public class Viaje {
     })
     private Neumatico neumatico;
 
-    // Campos financieros
-    private Double ingresosTotales;   // Suma de ingresos de cargas ida + vuelta
-    private Double gastosTotales;     // Suma de todos los gastos (viáticos, peajes, petroleo, adBlue, neumático)
-    private Double gananciaTotal;     // ingresosTotales - gastosTotales
+    private Double ingresosTotales;
+    private Double gastosTotales;
+    private Double gananciaTotal;
 
-    // Nuevo método para calcular total de viáticos
     public double getTotalViaticos() {
         if (viaticos == null || viaticos.isEmpty()) {
             return 0;
@@ -83,15 +87,12 @@ public class Viaje {
         return viaticos.stream().mapToDouble(Viatico::getMonto).sum();
     }
 
-    // Método para calcular total de peajes usando el campo 'costo'
     public double getTotalPeajes() {
         if (peajes == null || peajes.isEmpty()) {
             return 0;
         }
         return peajes.stream().mapToDouble(Peaje::getCosto).sum();
     }
-
-    // Getters y setters para gastosTotales (si usas Lombok @Data, no es obligatorio, pero para claridad)
 
     public Double getGastosTotales() {
         return gastosTotales;

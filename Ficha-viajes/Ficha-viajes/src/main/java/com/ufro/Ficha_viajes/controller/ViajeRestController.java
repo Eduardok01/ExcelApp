@@ -3,6 +3,7 @@ package com.ufro.Ficha_viajes.controller;
 import com.ufro.Ficha_viajes.model.Viaje;
 import com.ufro.Ficha_viajes.service.PdfService;
 import com.ufro.Ficha_viajes.service.ViajeService;
+import jakarta.validation.Valid;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/viajes")
-@CrossOrigin(origins = "http://localhost:8080") // Cambia al dominio o puerto de tu frontend Vue
+@CrossOrigin(origins = "http://localhost:5173") // Cambia según tu frontend
 public class ViajeRestController {
 
     private final ViajeService viajeService;
@@ -54,7 +55,7 @@ public class ViajeRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Viaje> crearViaje(@RequestBody Viaje viaje) {
+    public ResponseEntity<Viaje> crearViaje(@RequestBody @Valid Viaje viaje) {
         Viaje guardado = viajeService.save(viaje);
         return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }

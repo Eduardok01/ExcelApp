@@ -34,27 +34,26 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- Thymeleaf para renderizar HTML -->
+		<!-- Thymeleaf -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		<!-- PDF generation con Flying Saucer + OpenPDF -->
+		<!-- PDF generation -->
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
 			<artifactId>flying-saucer-pdf-openpdf</artifactId>
 			<version>9.1.22</version>
 		</dependency>
 
-		<!-- Soporte para imágenes SVG y fuentes en PDF -->
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-codec</artifactId>
 			<version>1.16</version>
 		</dependency>
 
-		<!-- Conector de base de datos MariaDB -->
+		<!-- Base de datos MariaDB -->
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
@@ -68,7 +67,7 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Spring Boot DevTools -->
+		<!-- DevTools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -81,6 +80,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- ✅ Validación Jakarta + Hibernate Validator -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.1.Final</version>
 		</dependency>
 	</dependencies>
 
