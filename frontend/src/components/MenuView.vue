@@ -1,8 +1,8 @@
 <template>
   <div class="menu-background">
-    <div class="menu-container" role="main" aria-label="Menú principal">
-      <h1>Menú Principal</h1>
-      <p class="subtitulo">Selecciona una opción para continuar</p>
+    <div class="menu-container" role="main" aria-label="Menú Principal">
+      <h1>Transportes Gutiérrez</h1>
+      <p class="subtitulo">¿Qué quieres hacer?</p>
 
       <div class="botones-principales">
         <button @click="irA('fichaNueva')" class="btn">

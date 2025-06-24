@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <FichaViaje />
+    <router-view />
   </div>
 </template>
 
 <script setup>
-import FichaViaje from './components/FichaViaje.vue'
+// No necesitas importar componentes aquí,
+// el router se encarga de eso según la ruta.
 </script>
